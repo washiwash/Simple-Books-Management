@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Books;
 
 class User extends Authenticatable
 {
@@ -52,5 +53,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Books::class, 'assign_student', 'user_id', 'book_id')
             ->withTimestamps();
+    }
+
+     public function createdBooks()
+    {
+        return $this->hasMany(Books::class, 'created_by');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Books;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class BooksController extends Controller
@@ -13,7 +14,14 @@ class BooksController extends Controller
      */
     public function index()
     {
-        $books = Books::query()->latest()->get();
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $books = Books::query()
+            ->where('created_by', Auth::id())
+            ->latest()
+            ->get();
 
         return view('addBooks', [
             'books' => $books,
@@ -33,6 +41,10 @@ class BooksController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:2000'],
@@ -40,6 +52,7 @@ class BooksController extends Controller
         ]);
 
         $validated['image'] = $request->file('image')->store('books', 'public');
+        $validated['created_by'] = Auth::id();
 
         Books::create($validated);
 
@@ -67,6 +80,12 @@ class BooksController extends Controller
      */
     public function update(Request $request, Books $books)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        abort_unless((int) $books->created_by === (int) Auth::id(), 403);
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,gif', 'max:2048'],
@@ -92,6 +111,12 @@ class BooksController extends Controller
      */
     public function destroy(Books $books)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        abort_unless((int) $books->created_by === (int) Auth::id(), 403);
+
         if (!empty($books->image)) {
             Storage::disk('public')->delete($books->image);
         }

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Books;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -11,7 +11,12 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return view('teacher');
+        $books = Books::query()
+        ->where('created_by', auth()->id())
+        ->latest()
+        ->get();
+
+    return view('teacher', compact('books'));
     }
 
     /**
@@ -27,7 +32,16 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        //
+          $data = $request->validate([
+        'title' => ['required', 'string'],
+        // ...other fields...
+    ]);
+
+    $data['created_by'] = auth()->id();
+
+    Books::create($data);
+
+    return redirect()->route('teacher.index');
     }
 
     /**

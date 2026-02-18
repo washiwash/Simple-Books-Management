@@ -13,6 +13,7 @@ class Books extends Model
     protected $table = 'books';
 
     protected $fillable = [
+        'created_by',
         'title',
         'description',
         'image',
@@ -22,5 +23,9 @@ class Books extends Model
     {
         return $this->belongsToMany(User::class, 'assign_student', 'book_id', 'user_id')
             ->withTimestamps();
+    }
+
+    public function creator(){
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

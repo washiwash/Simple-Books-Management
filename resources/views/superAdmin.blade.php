@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout footer="Super Admin">
      <x-slot:title>
         Super Admin
     </x-slot:title>

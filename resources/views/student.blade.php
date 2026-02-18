@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout footer="Student">
  <x-slot:title>
         Student
     </x-slot:title>
@@ -42,12 +42,9 @@
    
   </tbody>
 </table>
-
-</table>
 </div>
 
 <h1 class="text-[20px] font-semibold text-gray-500 mt-5">Total of Books: <span>{{ is_countable($books ?? null) ? count($books) : 0 }}</span></h1>
-
 
 
 

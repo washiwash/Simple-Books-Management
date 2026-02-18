@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" data-theme="lofi">
 
@@ -35,9 +34,7 @@
      </main>
 
     <footer class="footer footer-center p-5 bg-base-300 text-base-content text-xs">
-        <div>
-            <p>© 2026 Diwa - Student</p>
-        </div>
+        <p>© 2026 Diwa {{ filled($footer) ? '- ' . $footer : '- Student' }}</p>
     </footer>
 </body>
 
